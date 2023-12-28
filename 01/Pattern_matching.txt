@@ -10,4 +10,32 @@ public int Giorni(int mese, bool bisestile) =>
 	};
 
 
-try change it
+
+p. 39
+Select with iterator (second parameter)
+var formattedFilms = films.Select((x, i) => $"{i} - {x.Title}");
+
+
+Ranges p.40
+var a = Enumerable.Range(8, 5);
+var s = string.Join(", ", a);
+// s = "8, 9, 10, 11, 12"
+
+
+Count down
+var gridCoords = Enumerable.Repeat(5, 5).Select((x, i) => x - i)
+.SelectMany(x => Enumerable.Repeat(5, 5)
+.Select((y, i) => (x, y - i))
+);
+
+
+Aggregate (on more values) p.43
+
+var (totalBudget, totalRevenue) = films.Aggregate(
+	(Budget: 0.0M, Revenue: 0.0M),
+	(runningTotals, x) => (
+		runningTotals.Budget + x.Budget,
+		runningTotals.Revenue + x.BoxOfficeRevenue
+	)
+);
+
