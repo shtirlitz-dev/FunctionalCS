@@ -39,3 +39,117 @@ var (totalBudget, totalRevenue) = films.Aggregate(
 	)
 );
 
+challenges:
+https://adventofcode.com/
+https://projecteuler.net/
+
+
+tuples with named fields:
+var filmsWithCast = filmIds.Select(x => (
+	film: GetFilm(x),
+	castList: GetCastList(x)
+));
+
+then filmsWithCast.Select(x => "Title: " + x.film.Title +...)
+
+
+switch
+
+public decimal CalculateNewBalance(StandardBankAccount sba)
+{
+	switch (sba)
+	{
+		case PremiumBankAccount pba when pba.Balance > 10000:
+			return pba.Balance * (pba.InterestRate + pba.BonusInterestRate);
+		case MillionairesBankAccount mba:
+			return (mba.Balance * mba.InterestRate) +
+				(mba.OverflowBalance & mba.InterestRate);
+		case MonopolyPlayersBankAccount mba:
+			return (mba.Balance * mba.InterestRate) + PassingGoBonus;
+		default:
+			return sba.Balance * sba.InterestRate;
+	}
+}
+
+C# 8
+
+public decimal CalculateNewBalance(StandardBankAccount sba) =>
+	sba switch
+	{
+		PremiumBankAccount { Balance: > 10000 } pba => pba.Balance *
+			(pba.InterestRate + pba.BonusInterestRate),
+		MillionairesBankAccount mba => (mba.Balance * mba.InterestRate) +
+			(mba.OverflowBalance & mba.InterestRate),
+		MonopolyPlayersBankAccount mba =>
+			(mba.Balance * mba.InterestRate) + PassingGoBonus,
+		_ => sba.Balance * sba.InterestRate, // also throw new ...
+	};
+
+using tuples:
+var calculateMatchResult = (SPS myMove, SPS theirMove) =>
+(myMove, theirMove) switch
+{
+	_ when myMove == theirMove => GameResult.Draw,
+	( SPS.Scissor, SPS.Paper) => GameResult.Win,
+	( SPS.Paper, SPS.Stone ) => GameResult.Win,
+	(SPS.Stone, SPS.Scissor) => GameResult.Win,
+	_ => GameResult.Lose
+};
+
+C# 9 'and' and 'not'
+
+public decimal CalculateNewBalance(StandardBankAccount sba) =>
+	sba switch
+	{
+	PremiumBankAccount { Balance: > 10000 and <= 20000 } pba => pba.Balance * (pba.InterestRate + pba.BonusInterestRate),
+	PremiumBankAccount { Balance: > 20000 } pba => pba.Balance * (pba.InterestRate + pba.BonusInterestRate * 1.25M),
+	MillionairesBankAccount mba => (mba.Balance * mba.InterestRate) + (mba.OverflowBalance + mba.InterestRate),
+	MonopolyPlayersBankAccount {CurrSquare: not "InJail" } mba => (mba.Balance * mba.InterestRate) + mba.PassingGoBonus;
+	ClosedBankAccount => 0,
+	_ => sba.Balance * sba.InterestRate
+	};
+
+C# 10 properties of subobject: MonopolyPlayersBankAccount {Player.FirstName: "Simon" } mba => ...
+
+C# 11contents of an enumerable
+var verb = input.Split(" ") switch
+	{
+		["GO", "TO",.. var rest] => this.actions.GoTo(rest),
+		["GO", .. var rest] => this.actions.GoTo(rest),
+		["EAT", .. var rest] => this.actions.Eat(rest),
+		["KILL", .. var rest] => this.actions.Kill(rest)
+	};
+
+
+var input = "Percy James Patrick Kent-Smith".Split(" "); // The real name of Doctor Who actor Sylvester McCoy
+var sylv = new Person
+{
+	FirstName = input.First(),
+	MiddleNames = input is [_, .. var mns, _] ? mns : Enumerable.Empty<string>(),   // array of middle names
+	LastName = input.Last()
+};
+
+
+structs
+from C# 7.2 can be readonly 
+public readonly struct Movie
+{
+	public string Title { get; private set; };
+... other properties, constructor
+}
+
+
+C# 9 init-only setters
+
+... public string Title { get; init; }
+
+
+record p.67
+
+
+
+
+
+
+
+
